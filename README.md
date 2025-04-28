@@ -218,4 +218,118 @@ Solving this significantly improved the script’s reliability and made the erro
 - **Support for ****`--help`**: Making it easier for new users to understand the script quickly.
 - **Improved Option Parsing**: Using `getopts` for clean, flexible handling of multiple flag combinations and invalid inputs.
 
+---
+
+# Task 2: Verify DNS Resolution
+
+To diagnose why `internal.example.com` is unreachable with "host not found" errors, we first verify DNS resolution. The goal is to compare how the system’s configured DNS server (from `/etc/resolv.conf`) resolves the hostname versus a public DNS server like `8.8.8.8`.
+
+## Steps to Verify DNS Resolution
+
+### Check the Current DNS Configuration
+View the DNS servers configured in `/etc/resolv.conf`:
+```bash
+cat /etc/resolv.conf
+```
+
+**Expected Output:**
+```
+nameserver 192.168.1.1
+nameserver 192.168.1.2
+```
+
+This shows the system is using internal DNS servers.
+
+> **Screenshot Note:** Capture the output of `cat /etc/resolv.conf` to document the configured DNS servers.
+
+---
+
+### Test DNS Resolution Using System DNS
+Use `dig` to query `internal.example.com` using the system’s default DNS servers:
+```bash
+dig internal.example.com
+```
+
+**Expected Output (if resolution fails):**
+```
+;; QUESTION SECTION:
+;internal.example.com.          IN      A
+
+;; AUTHORITY SECTION:
+example.com.            3600    IN      SOA     ns1.example.com. hostmaster.example.com. (
+                                        2025042701 ; serial
+                                        7200       ; refresh
+                                        3600       ; retry
+                                        1209600    ; expire
+                                        3600       ; minimum
+                                        )
+;; Query time: 50 msec
+;; SERVER: 192.168.1.1#53(192.168.1.1)
+```
+
+If no ANSWER SECTION appears, the DNS server cannot resolve `internal.example.com`.
+
+> **Screenshot Note:** Capture the `dig` output to show whether an IP address was returned or if the query failed.
+
+---
+
+### Test DNS Resolution Using Google’s DNS (8.8.8.8)
+Explicitly query `8.8.8.8` to see if the public DNS resolves the hostname:
+```bash
+dig @8.8.8.8 internal.example.com
+```
+
+**Expected Output (likely fails for internal hostname):**
+```
+;; QUESTION SECTION:
+;internal.example.com.          IN      A
+
+;; AUTHORITY SECTION:
+example.com.            3600    IN      SOA     ns1.example.com. hostmaster.example.com. (
+                                        2025042701 ; serial
+                                        7200       ; refresh
+                                        3600       ; retry
+                                        1209600    ; expire
+                                        3600       ; minimum
+                                        )
+;; Query time: 30 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+```
+
+Since `internal.example.com` is likely an internal hostname, `8.8.8.8` probably won’t resolve it.
+
+> **Screenshot Note:** Capture this `dig` output to compare with the system DNS result.
+
+---
+
+### Alternative: Use `nslookup` for Simplicity
+If `dig` is unavailable, use `nslookup`:
+```bash
+nslookup internal.example.com
+nslookup internal.example.com 8.8.8.8
+```
+
+**Expected Output (if resolution fails):**
+```
+Server:         192.168.1.1
+Address:        192.168.1.1#53
+
+** server can't find internal.example.com: NXDOMAIN
+```
+
+> **Screenshot Note:** Capture `nslookup` outputs for both queries.
+
+---
+
+## Analysis
+
+- If the system’s DNS (`192.168.1.1`) fails to resolve `internal.example.com` but is expected to, the internal DNS server may be misconfigured or down.
+- If `8.8.8.8` fails (as expected for an internal hostname), this is normal behavior.
+- If both fail and you know `internal.example.com` should resolve internally, the issue lies with the internal DNS server or client configuration.
+
+## Next Steps
+
+- If DNS resolution fails, we’ll explore potential DNS-related causes in **Task 3**.
+- If resolution succeeds (e.g., returns `192.168.1.100`), proceed to check service reachability.
+
 
