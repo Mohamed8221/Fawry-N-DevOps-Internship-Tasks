@@ -1,28 +1,53 @@
-# Fawry-N-DevOps-Internship-Tasks
+Task 1: mygrep.sh - A Mini grep Clone
+mygrep.sh is a Bash script that replicates a simplified version of the grep command. It searches for a string in a text file (case-insensitively) and supports options to show line numbers (-n) and invert matches (-v). Designed to be robust and user-friendly, it handles invalid inputs with clear error messages and includes a --help flag for usage guidance. This script was crafted to feel like a handmade tool, mimicking grep’s output style.
+Table of Contents
 
-#Task 1: mygrep.sh - A Mini Version of grep
-mygrep.sh is a Bash script designed as a simplified version of the grep command. It searches for a string in a text file (case-insensitively) and supports options to display line numbers (-n) and invert matches (-v). The script is robust, handling invalid inputs with clear error messages, and includes a --help flag for usage information. Crafted to feel like a handmade tool, it prioritizes user-friendliness and mimics grep’s output style.
+Features
+Installation
+Usage
+Examples
+Testing
+Reflective Section
+Bonus Features
+Contributing
+License
+
 Features
 
-Case-Insensitive Search: Matches the specified string regardless of case (e.g., "hello" matches "HELLO").
+Case-Insensitive Search: Matches strings regardless of case (e.g., "hello" matches "HELLO").
 Line Numbers (-n): Prefixes matching lines with their line numbers.
 Inverted Matching (-v): Outputs lines that do not contain the search string.
-Help Flag (--help): Provides usage instructions.
-Input Validation: Ensures proper arguments and file existence, with descriptive error messages.
-Flexible Option Parsing: Uses getopts to handle -n and -v in any combination (e.g., -vn, -nv).
+Help Flag (--help): Displays usage instructions.
+Robust Validation: Checks for missing or invalid arguments/files, with clear errors.
+Flexible Options: Uses getopts to handle -n and -v in any order (e.g., -vn, -nv).
+
+Installation
+
+Download the Script:Save mygrep.sh to your desired directory.
+
+Make it Executable:
+chmod +x mygrep.sh
+
+
+Requirements:
+
+Bash (available on most Linux/Unix systems).
+No additional dependencies.
+
+
 
 Usage
-Run the script with the following syntax:
+Run the script with:
 ./mygrep.sh [-n] [-v] <search_string> <file>
 
 Options
 
--n: Display line numbers for each matching line.
--v: Invert the match to show non-matching lines.
---help: Show usage information.
+-n: Show line numbers for matching lines.
+-v: Invert match (show non-matching lines).
+--help: Display usage information.
 
 Examples
-Using a file testfile.txt with the following content:
+Using a sample file testfile.txt:
 Hello world
 This is a test
 another test line
@@ -39,7 +64,7 @@ Hello world
 HELLO AGAIN
 
 
-Show Line Numbers:
+With Line Numbers:
 ./mygrep.sh -n hello testfile.txt
 
 Output:
@@ -93,11 +118,8 @@ Options:
 
 
 
-Setup and Testing
-
-Make the Script Executable:
-chmod +x mygrep.sh
-
+Testing
+To test the script:
 
 Create testfile.txt:
 cat << EOF > testfile.txt
@@ -110,26 +132,28 @@ Testing one two three
 EOF
 
 
-Run Test Cases:Execute the example commands above to verify functionality. Screenshots of these commands would capture:
+Run Test Cases:Execute the Examples commands. Screenshots would show:
 
 Matching lines for basic searches.
-Line numbers for -n options.
-Non-matching lines for -v options.
+Line numbers for -n.
+Non-matching lines for -v.
 Error messages for invalid inputs.
 
 
 
 Reflective Section
 How the Script Handles Arguments and Options
-The script uses getopts to parse -n and -v flags, setting boolean variables (show_line_numbers and invert_match) to handle options flexibly (e.g., -vn or -nv). After parsing, it shifts to access the search string ($1) and file ($2). Validation checks the number of arguments: if fewer than two are provided, it detects whether $1 is a file (missing search string) or not (missing file). It also verifies the file exists. The script processes the file line-by-line, using grep -i -q for case-insensitive matching, and outputs matching (or non-matching for -v) lines with optional line numbers (-n). The --help flag displays a usage message, enhancing usability.
+The script uses getopts to parse -n and -v, setting boolean flags (show_line_numbers, invert_match) for flexible option handling (e.g., -vn or -nv). It shifts past options to access the search string ($1) and file ($2). Validation checks argument count: if fewer than two, it distinguishes between a missing search string (if $1 is a file) or missing file. File existence is verified. Lines are read with a while loop, using grep -i -q for case-insensitive matching. Matching (or non-matching for -v) lines are printed, with line numbers if -n is set. The --help flag shows usage, enhancing usability.
 Supporting Regex or -i/-c/-l Options
-Adding regex or options like -i (case-insensitive toggle), -c (count matches), or -l (list filenames) would extend the script’s modular design. Regex would use grep -E for pattern matching, with validation for regex syntax. The -i option would toggle case sensitivity (currently fixed). For -c, I’d count matches and print only the total. For -l, I’d support multiple files and print filenames with matches. This would involve updating getopts to handle new flags (getopts "nvicl") and adding output mode logic, keeping validation and processing separate for maintainability.
+To add regex or options like -i (case-insensitive toggle), -c (count matches), or -l (list filenames), I’d extend the modular structure. Regex would use grep -E, with syntax validation. The -i option would toggle grep’s -i (currently fixed). For -c, I’d count matches and print the total. For -l, I’d handle multiple files and print matching filenames. This requires updating getopts (getopts "nvicl") and adding output mode logic, keeping validation separate.
 Hardest Part to Implement and Why
-The most challenging part was perfecting the input validation, particularly for cases like ./mygrep.sh -v testfile.txt. Early versions incorrectly treated testfile.txt as the search string, requiring a fix to check if $1 is a file and flag a missing search string. This took some debugging to get right, as I had to balance clear, grep-like error messages with robust logic for edge cases (e.g., empty files or missing arguments). It felt like untangling a knot, but solving it made the script much more reliable.
+The trickiest part was input validation, especially handling ./mygrep.sh -v testfile.txt. Early versions misread testfile.txt as the search string. Adding logic to check if $1 is a file (-f "$1") and trigger the right error took debugging. Balancing concise, grep-like errors with robust edge-case handling (e.g., empty files) was like solving a puzzle, but it made the script solid.
 Bonus Features
 
-Support for --help Flag: The --help flag prints usage information, making the script accessible to new users.
-Improved Option Parsing with getopts: getopts ensures clean handling of -n and -v, supporting any flag combination and catching invalid options.
+** --help Flag**: Prints usage information for easy onboarding.
+** getopts Parsing**: Ensures robust handling of -n and -v, supporting any combination and catching invalid flags.
 
-Notes
-This script was crafted to feel like a developer’s handmade project, with clear comments, intuitive errors, and a structure that echoes grep. The reflective section captures the design process, and the test cases confirm reliability. To extend it (e.g., with regex or new options), the script’s modular foundation is ready for growth.
+Contributing
+Feel free to fork, modify, or submit pull requests! Ideas for new features (e.g., regex, -i, -c, -l) are welcome. Report issues or suggestions via GitHub (if hosted).
+License
+This project is unlicensed, free to use and modify as you see fit.
