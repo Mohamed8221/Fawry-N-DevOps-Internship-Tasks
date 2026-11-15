@@ -1,4 +1,15 @@
-# mygrep.sh - A Mini Version of `grep`
+# Fawry N² DevOps Internship Tasks
+
+My solutions to the technical tasks for the Fawry N² DevOps internship.
+
+| Task | What it covers | Files |
+|---|---|---|
+| [Task 1: `mygrep.sh`](#task-1-mygrepsh---a-mini-version-of-grep) | A mini `grep` in Bash with `-n`, `-v`, combined flags, `--help`, and input validation | [`Task_1/`](Task_1) |
+| [Task 2: DNS troubleshooting](#task-2-verify-dns-resolution) | Diagnosing why an internal hostname fails to resolve, step by step | [`Task_2/`](Task_2) |
+
+---
+
+# Task 1: mygrep.sh - A Mini Version of `grep`
 
 `mygrep.sh` is a Bash script designed as a simplified version of the `grep` command.\
 It searches for a string in a text file (case-insensitively) and supports options to display line numbers (`-n`) and invert matches (`-v`).\
@@ -11,9 +22,9 @@ Crafted to feel like a handmade developer tool, it prioritizes user-friendliness
 ## Features
 
 - **Case-Insensitive Search**: Matches the specified string regardless of case (e.g., `"hello"` matches `"HELLO"`).
-- **Line Numbers (****`-n`****)**: Prefixes matching lines with their line numbers.
-- **Inverted Matching (****`-v`****)**: Outputs lines that do not contain the search string.
-- **Help Flag (****`--help`****)**: Displays usage instructions.
+- **Line Numbers (`-n`)**: Prefixes matching lines with their line numbers.
+- **Inverted Matching (`-v`)**: Outputs lines that do not contain the search string.
+- **Help Flag (`--help`)**: Displays usage instructions.
 - **Input Validation**: Ensures proper arguments and file existence, with descriptive error messages.
 - **Flexible Option Parsing**: Uses `getopts` to handle `-n` and `-v` in any combination (e.g., `-vn`, `-nv`).
 
@@ -196,9 +207,9 @@ Options:
 Possible extensions:
 
 - **Regex Matching**: Use `grep -E` for extended patterns.
-- **`-i`**** Flag**: Toggle case sensitivity dynamically (currently always case-insensitive).
-- **`-c`**** Flag**: Count and output only the number of matches.
-- **`-l`**** Flag**: List filenames with matches across multiple files.
+- **`-i` flag**: Toggle case sensitivity dynamically (currently always case-insensitive).
+- **`-c` flag**: Count and output only the number of matches.
+- **`-l` flag**: List filenames with matches across multiple files.
 
 These additions would involve expanding `getopts` (e.g., `getopts "nvicl"`) and modularizing output logic further.
 
@@ -215,7 +226,7 @@ Solving this significantly improved the script’s reliability and made the erro
 
 ## Bonus Features
 
-- **Support for ****`--help`**: Making it easier for new users to understand the script quickly.
+- **Support for `--help`**: Making it easier for new users to understand the script quickly.
 - **Improved Option Parsing**: Using `getopts` for clean, flexible handling of multiple flag combinations and invalid inputs.
 
 ---
